@@ -15,7 +15,7 @@
             <outputDirectory>config</outputDirectory>
         </fileSet>
     </fileSets>
-
+    <!--与fileSets标签类似，指定要包含的文件，及所属目录-->
     <files>
         <file>
             <source>${project.basedir}/src/main/resources/plugin-descriptor.properties</source>

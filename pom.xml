@@ -76,6 +76,7 @@
     </repositories>
 
     <dependencies>
+        <!--仅编译时需要-->
         <dependency>
             <groupId>org.elasticsearch</groupId>
             <artifactId>elasticsearch</artifactId>
@@ -95,7 +96,7 @@
             <artifactId>log4j-api</artifactId>
             <version>2.17.1</version>
         </dependency>
-
+        <!--hamcrest，测试及断言用-->
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
@@ -153,23 +154,29 @@
             </plugin>
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-
+                <!-- assembly插件，定制化打包插件，apache项目的打包方式-->
                 <configuration>
+                    <!-- 打包后的文件名不包含assemblyId-->
                     <appendAssemblyId>false</appendAssemblyId>
+                    <!-- 输出路径-->
                     <outputDirectory>${project.build.directory}/releases/</outputDirectory>
+                    <!-- 配置文件路径-->
                     <descriptors>
                         <descriptor>${basedir}/src/main/assemblies/plugin.xml</descriptor>
                     </descriptors>
                     <archive>
                         <manifest>
+                            <!-- 主类地址，全限定名-->
                             <mainClass>fully.qualified.MainClass</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
-                <executions>
+                <executions><!-- 配置执行器 -->
                     <execution>
+                        <!-- 绑定到package生命周期 -->
                         <phase>package</phase>
                         <goals>
+                            <!-- 只运行一次 -->
                             <goal>single</goal>
                         </goals>
                     </execution>

@@ -1,13 +1,17 @@
 <?xml version="1.0"?>
 <assembly>
+    <!--打包后的文件名称前缀，末尾会跟上pom中相应的版本号-->
     <id>analysis-ik-release</id>
+    <!--打包格式，包括zip、tar、tar.gz 、jar、war等等，可以同时打多种包-->
     <formats>
         <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
+    <!--指定要包含的文件集，这里是包含了词典、以及IK.cfg.xml-->
     <fileSets>
         <fileSet>
         <directory>${project.basedir}/config</directory>
+            <!--输出目录名称，这里与输入保存一致-->
             <outputDirectory>config</outputDirectory>
         </fileSet>
     </fileSets>
@@ -24,11 +28,14 @@
             <filtered>true</filtered>
         </file>
     </files>
+    <!--定制工程依赖的 jar 包的打包方式-->
     <dependencySets>
         <dependencySet>
+            <!--目录根目录的位置，默认为根目录同级-->
             <outputDirectory/>
             <useProjectArtifact>true</useProjectArtifact>
             <useTransitiveFiltering>true</useTransitiveFiltering>
+            <!--排除掉 groupId:artifactId-->
             <excludes>
                 <exclude>org.elasticsearch:elasticsearch</exclude>
             </excludes>
@@ -37,6 +44,7 @@
             <outputDirectory/>
             <useProjectArtifact>true</useProjectArtifact>
             <useTransitiveFiltering>true</useTransitiveFiltering>
+            <!--包含httpClient，这里应该是用于热加载词典-->
             <includes>
                 <include>org.apache.httpcomponents:httpclient</include>
             </includes>

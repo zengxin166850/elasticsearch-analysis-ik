@@ -95,10 +95,10 @@ class DictSegment implements Comparable<DictSegment>{
 	
 	/**
 	 * 匹配词段
-	 * @param charArray
-	 * @param begin
-	 * @param length
-	 * @param searchHit
+	 * @param charArray 词元
+	 * @param begin 开始位置
+	 * @param length 长度
+	 * @param searchHit 命中？
 	 * @return Hit 
 	 */
 	Hit match(char[] charArray , int begin , int length , Hit searchHit){
@@ -163,16 +163,16 @@ class DictSegment implements Comparable<DictSegment>{
 	}
 
 	/**
-	 * 加载填充词典片段
-	 * @param charArray
+	 * 加载填充词典片段，
+	 * @param charArray 字符数组
 	 */
 	void fillSegment(char[] charArray){
 		this.fillSegment(charArray, 0 , charArray.length , 1); 
 	}
 	
 	/**
-	 * 屏蔽词典中的一个词
-	 * @param charArray
+	 * 屏蔽词典中的一个词,通过将 nodeState设置为 0 屏蔽掉该词。。
+	 * @param charArray 词元
 	 */
 	void disableSegment(char[] charArray){
 		this.fillSegment(charArray, 0 , charArray.length , 0); 
@@ -180,10 +180,15 @@ class DictSegment implements Comparable<DictSegment>{
 	
 	/**
 	 * 加载填充词典片段
-	 * @param charArray
-	 * @param begin
-	 * @param length
-	 * @param enabled
+	 * @param charArray 将文本中按行读出的 word 转为 charArray 后的结果，例如{'一','一','列','举'}
+	 * @param begin 当前处理的字符相对于 charArray 的位置
+	 * @param length 剩余长度
+	 * @param enabled 1或0 ，当enabled为1时，若dictSegment中未找到则进行创建，否则不创建
+	 * 当执行完 loadDictFile之和，其实就是将 xxx.dic文件处理为了一颗词典树，大致如下
+	 *                  一
+	 *              一      丁
+	 *            列 对 道  不 点
+	 *          举  应 来  识  儿.....
 	 */
 	private synchronized void fillSegment(char[] charArray , int begin , int length , int enabled){
 		//获取字典表中的汉字对象
@@ -300,10 +305,12 @@ class DictSegment implements Comparable<DictSegment>{
 		}
 		return this.childrenMap;
 	}
-	
+
 	/**
+	 *
 	 * 将数组中的segment迁移到Map中
-	 * @param segmentArray
+	 * @param segmentArray 数组
+	 * @param segmentMap map
 	 */
 	private void migrate(DictSegment[] segmentArray , Map<Character , DictSegment> segmentMap){
 		for(DictSegment segment : segmentArray){
@@ -315,8 +322,8 @@ class DictSegment implements Comparable<DictSegment>{
 
 	/**
 	 * 实现Comparable接口
-	 * @param o
-	 * @return int
+	 * @param o segment
+	 * @return int 排序
 	 */
 	public int compareTo(DictSegment o) {
 		//对当前节点存储的char进行比较

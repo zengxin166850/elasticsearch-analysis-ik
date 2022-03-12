@@ -96,6 +96,7 @@ public class Dictionary {
 
 	private Path conf_dir;
 	private Properties props;
+	public Dictionary(){};
 
 	private Dictionary(Configuration cfg) {
 		this.configuration = cfg;
@@ -212,7 +213,9 @@ public class Dictionary {
 	}
 
 	/**
-	 * 从文件中逐行读取 word，加入到对应的 dictSegment中
+	 * 从文件中逐行读取 word，加入到对应的 dictSegment中，其实这一步就是构造出了一颗词典树
+	 * 对于每一个 dictSegment而言，当 nodeState = 1 时代表的是一个完整的词，
+	 * 由于存在词语长短的问题，所以，找到 nodeState之后直接分词，或者是继续找到最后一个节点，此时就区分开了 ik_smart和 ik_max_word之间的区别了
 	 * @param dict 词典
 	 * @param file 文件，例如 xxx.dic
 	 * @param critical 判断文件是否重要，在本方法中的作用是-->该文件缺失时，是忽略掉，还是抛出异常
@@ -225,13 +228,14 @@ public class Dictionary {
 			// 先读一行来看
 			String word = br.readLine();
 			if (word != null) {
+				// 这里的\uFEFF是 UTF8 与 UTF8-sig编码之间的区别，为了避免该问题，此处特殊处理了一下
 				if (word.startsWith("\uFEFF"))
 					word = word.substring(1);
 				// 确认无误，继续按行read，读取到末尾为止。
 				for (; word != null; word = br.readLine()) {
 					word = word.trim();
 					if (word.isEmpty()) continue;
-					// 将有效的word，添加到 dictSegment中。
+					// 将有效的word，添加到 dictSegment中。这里的 toCharArray 将词转为了单个字的char数组
 					dict.fillSegment(word.toCharArray());
 				}
 			}

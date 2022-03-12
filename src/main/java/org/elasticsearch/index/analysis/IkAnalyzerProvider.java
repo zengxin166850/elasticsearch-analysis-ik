@@ -6,6 +6,10 @@ import org.elasticsearch.index.IndexSettings;
 import org.wltea.analyzer.cfg.Configuration;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+/**
+ * ik分词器 Provider，
+ *
+ */
 public class IkAnalyzerProvider extends AbstractIndexAnalyzerProvider<IKAnalyzer> {
     private final IKAnalyzer analyzer;
 

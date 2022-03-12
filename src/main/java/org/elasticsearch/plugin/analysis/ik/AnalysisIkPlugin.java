@@ -33,7 +33,7 @@ public class AnalysisIkPlugin extends Plugin implements AnalysisPlugin {
     public Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> getAnalyzers() {
         Map<String, AnalysisModule.AnalysisProvider<AnalyzerProvider<? extends Analyzer>>> extra = new HashMap<>();
         // 添加 ik_smart 和 ik_max_word 到analyzer中
-        // 对应了use_smart参数为 true或false
+        // 对应了use_smart参数为 true或false，Analyzer通过 Provider创建
         extra.put("ik_smart", IkAnalyzerProvider::getIkSmartAnalyzerProvider);
         extra.put("ik_max_word", IkAnalyzerProvider::getIkAnalyzerProvider);
 

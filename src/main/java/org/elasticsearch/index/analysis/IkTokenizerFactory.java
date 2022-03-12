@@ -7,6 +7,9 @@ import org.elasticsearch.index.IndexSettings;
 import org.wltea.analyzer.cfg.Configuration;
 import org.wltea.analyzer.lucene.IKTokenizer;
 
+/**
+ * tokenizer工厂，依旧是创建两种
+ */
 public class IkTokenizerFactory extends AbstractTokenizerFactory {
   private Configuration configuration;
 

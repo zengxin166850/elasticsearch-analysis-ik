@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.wltea.analyzer.cfg;
 
@@ -15,8 +15,8 @@ import java.nio.file.Path;
 
 public class Configuration {
 
-	private Environment environment;
-	private Settings settings;
+	private final Environment environment;
+	private final Settings settings;
 
 	//是否启用智能分词
 	private  boolean useSmart;
@@ -27,7 +27,11 @@ public class Configuration {
 	//是否启用小写处理
 	private boolean enableLowercase=true;
 
-
+	/**
+	 * 注入es的 env及settings
+	 * @param env env
+	 * @param settings settings
+	 */
 	@Inject
 	public Configuration(Environment env,Settings settings) {
 		this.environment = env;
@@ -36,11 +40,15 @@ public class Configuration {
 		this.useSmart = settings.get("use_smart", "false").equals("true");
 		this.enableLowercase = settings.get("enable_lowercase", "true").equals("true");
 		this.enableRemoteDict = settings.get("enable_remote_dict", "true").equals("true");
-
+		// 主动进行词典初始化，加载词典
 		Dictionary.initial(this);
 
 	}
 
+	/**
+	 * 获取config目录
+	 * @return config目录所在的path
+	 */
 	public Path getConfigInPluginDir() {
 		return PathUtils
 				.get(new File(AnalysisIkPlugin.class.getProtectionDomain().getCodeSource().getLocation().getPath())

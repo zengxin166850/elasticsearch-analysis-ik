@@ -32,7 +32,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * 词典树分段，表示词典树的一个分枝
  */
-class DictSegment implements Comparable<DictSegment>{
+public class DictSegment implements Comparable<DictSegment>{
 	
 	//公用字典表，存储汉字
 	private static final Map<Character , Character> charMap = new ConcurrentHashMap<Character , Character>(16 , 0.95f);
@@ -55,7 +55,7 @@ class DictSegment implements Comparable<DictSegment>{
 	private int nodeState = 0;	
 	
 	
-	DictSegment(Character nodeChar){
+	public DictSegment(Character nodeChar){
 		if(nodeChar == null){
 			throw new IllegalArgumentException("node char cannot be empty");
 		}
@@ -75,21 +75,21 @@ class DictSegment implements Comparable<DictSegment>{
 	
 	/**
 	 * 匹配词段
-	 * @param charArray
+	 * @param charArray 词元
 	 * @return Hit
 	 */
-	Hit match(char[] charArray){
+	public Hit match(char[] charArray){
 		return this.match(charArray , 0 , charArray.length , null);
 	}
 	
 	/**
 	 * 匹配词段
-	 * @param charArray
-	 * @param begin
-	 * @param length
+	 * @param charArray 词元
+	 * @param begin 开始位置
+	 * @param length 长度
 	 * @return Hit 
 	 */
-	Hit match(char[] charArray , int begin , int length){
+	public Hit match(char[] charArray , int begin , int length){
 		return this.match(charArray , begin , length , null);
 	}
 	
@@ -106,7 +106,7 @@ class DictSegment implements Comparable<DictSegment>{
 		if(searchHit == null){
 			//如果hit为空，新建
 			searchHit= new Hit();
-			//设置hit的其实文本位置
+			//设置hit的起始文本位置
 			searchHit.setBegin(begin);
 		}else{
 			//否则要将HIT状态重置
@@ -120,7 +120,7 @@ class DictSegment implements Comparable<DictSegment>{
 		
 		//引用实例变量为本地变量，避免查询时遇到更新的同步问题
 		DictSegment[] segmentArray = this.childrenArray;
-		Map<Character , DictSegment> segmentMap = this.childrenMap;		
+		Map<Character , DictSegment> segmentMap = this.childrenMap;
 		
 		//STEP1 在节点中查找keyChar对应的DictSegment
 		if(segmentArray != null){
@@ -143,11 +143,13 @@ class DictSegment implements Comparable<DictSegment>{
 				return ds.match(charArray, begin + 1 , length - 1 , searchHit);
 			}else if (length == 1){
 				
-				//搜索最后一个char
+				//搜索最后一个char,nodeState==1表示这是一个完整的词，否则为前缀匹配 - -。
 				if(ds.nodeState == 1){
 					//添加HIT状态为完全匹配
 					searchHit.setMatch();
 				}
+				// 这里没有用else if,所以即使当前词元完全匹配后，仍需要将前缀匹配给标识上，
+				// 而判断前缀匹配的方式则是通过 storeSize的大小，此部分会影响smart分词和max_word分词
 				if(ds.hasNextNode()){
 					//添加HIT状态为前缀匹配
 					searchHit.setPrefix();

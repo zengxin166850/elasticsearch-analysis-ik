@@ -221,7 +221,7 @@ public class Dictionary {
 	 * @param critical 判断文件是否重要，在本方法中的作用是-->该文件缺失时，是忽略掉，还是抛出异常
 	 * @param name 词典名,用于做区分、标识
 	 */
-	private void loadDictFile(DictSegment dict, Path file, boolean critical, String name) {
+	public void loadDictFile(DictSegment dict, Path file, boolean critical, String name) {
 		try (InputStream is = new FileInputStream(file.toFile())) {
 			BufferedReader br = new BufferedReader(
 					new InputStreamReader(is, "UTF-8"), 512);
@@ -518,9 +518,9 @@ public class Dictionary {
 						String typeValue = contentType.getValue();
 						if(typeValue!=null&&typeValue.contains("charset=")){
 							charset = typeValue.substring(typeValue.lastIndexOf("=") + 1);
-						}
 					}
-
+					}
+					// 当文件较大时，content-Length不一定会携带，此时需要通过Chunked来判断
 					if (entity.getContentLength() > 0 || entity.isChunked()) {
 						in = new BufferedReader(new InputStreamReader(entity.getContent(), charset));
 						String line;
@@ -531,7 +531,7 @@ public class Dictionary {
 						response.close();
 						return buffer;
 					}
-			}
+				}
 			}
 			response.close();
 		} catch (IllegalStateException | IOException e) {
@@ -617,6 +617,7 @@ public class Dictionary {
 		logger.info("start to reload ik dict.");
 		// 新开一个实例加载词典，减少加载过程对当前词典使用的影响
 		Dictionary tmpDict = new Dictionary(configuration);
+		// 这一行是修复了reaload过程中的bug。保持cfg与原有词典一致
 		tmpDict.configuration = getSingleton().configuration;
 		tmpDict.loadMainDict();
 		tmpDict.loadStopWordDict();
